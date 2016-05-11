@@ -13,11 +13,6 @@
 - name: Install Consul
   yum: name={{ consul_pckg }} state=present
 
-- name: Generate Consul key
-  shell: PATH=/usr/local/bin:$PATH consul keygen
-  register: consul_raw_key
-  run_once: true
-
 - name: Consul directories
   file: "dest=/opt/consul state=directory owner={{ consul_user }} group={{ consul_group}}"
 

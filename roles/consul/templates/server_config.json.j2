@@ -14,7 +14,6 @@
   "data_dir": "{{ consul_data_path }}",
   "datacenter": "online",
   "domain": "{{ consul_domain }}",
-  "encrypt": "{{ consul_raw_key['stdout']}}",
   "log_level": "{{ consul_log_level }}",
   "enable_syslog": {{ consul_syslog_enable }},
   "start_join": {{ lbracket }}{% for host in groups['webapp'] %}{% if hostvars[inventory_hostname]['ansible_eth0']['ipv4']['address'] != hostvars[host]['ansible_eth0']['ipv4']['address']  %}{{ comma() }}{{ quote }}{{ hostvars[host]['ansible_eth0']['ipv4']['address'] }}{{ quote }}{% endif %}
