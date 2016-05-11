@@ -4,6 +4,8 @@ ansible
 [webapp]
 web1
 web2
+
+[newhosts]
 web3
 
 [database]
