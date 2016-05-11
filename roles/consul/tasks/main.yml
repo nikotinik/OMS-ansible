@@ -7,6 +7,10 @@
 - name: Install unzip
   yum: name=unzip state=present
 
+- name: Install pip
+  yum: name=python-pip state=present
+  when: consul_node_role == "client"
+
 - name: "Add Consul user"
   user: name=consul comment="Consul user" uid=1042 group=bin
 
