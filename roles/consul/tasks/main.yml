@@ -29,25 +29,33 @@
 - file: "dest=/etc/consul.d state=directory owner={{ consul_user }} group={{ consul_group}}"
 
 - file: "dest=/etc/consul.d/bootstrap state=directory owner={{ consul_user }} group={{ consul_group}}"
+  when: consul_node_role == "bootstrap"
 
 - file: "dest=/etc/consul.d/server state=directory owner={{ consul_user }} group={{ consul_group}}"
+  when: consul_node_role == "server"
 
 - file: "dest=/etc/consul.d/client state=directory owner={{ consul_user }} group={{ consul_group}}"
+  when: consul_node_role == "client"
 
 - name: Initial Consul bootstrap configuration
   template: src=bootstrap_config.json.j2 dest={{ consul_config_path }}/bootstrap/config.json
+  when: consul_node_role == "bootstrap"
 
 - name: Initial Consul server configuration
   template: src=server_config.json.j2 dest={{ consul_config_path }}/server/config.json
+  when: consul_node_role == "server"
 
 - name: Initial Consul client configuration
   template: src=client_config.json.j2 dest={{ consul_config_path }}/client/config.json
+  when: consul_node_role == "client"
 
 - name: "Download Consul UI"
   get_url: url={{ consul_ui_url }} dest=/tmp/{{ consul_ui_pkg }} timeout=74
+  when: not consul_node_role == "client"
 
 - name: "Install Consul UI"
   unarchive: src=/tmp/{{ consul_ui_pkg }} dest=/opt/consul/ui/ owner={{ consul_user }} group={{ consul_group }} mode=0755 copy=no
+  when: not consul_node_role == "client"
 
 - name: SYSV init script
   template: src=consul_sysvinit.j2 dest=/etc/init.d/consul owner=root group=root mode=755
@@ -59,3 +67,14 @@
 
 - name: Start Consul
   service: name=consul state=started
+
+- name: configuring consul for registering new hosts
+  pip: name=python-consul
+  when: consul_node_role == "client"
+
+- name: register consul service with the local consul agent
+  consul:
+    service_name: consul
+    service_port: 8300
+  when: consul_node_role == "client"
+

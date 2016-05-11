@@ -4,8 +4,8 @@
 {% set quote = '"' %}
 
 {
-  "advertise_addr": "{{ hostvars[inventory_hostname]['ansible_eth0']['ipv4']['address'] }}",
-  "bind_addr": "{{ hostvars[inventory_hostname]['ansible_eth0']['ipv4']['address'] }}",
+  "advertise_addr": "{{ hostvars[inventory_hostname]['ansible_eth1']['ipv4']['address'] }}",
+  "bind_addr": "{{ hostvars[inventory_hostname]['ansible_eth1']['ipv4']['address'] }}",
   "bootstrap": false,
   "server": false,
   "client_addr": "0.0.0.0",
@@ -16,8 +16,6 @@
   "domain": "{{ consul_domain }}",
   "log_level": "{{ consul_log_level }}",
   "enable_syslog": {{ consul_syslog_enable }},
-  "start_join": {{ lbracket }}{% for host in groups['webapp'] %}
-   {{ comma() }}{{ quote }}{{ hostvars[host]['ansible_eth0']['ipv4']['address'] }}{{ quote }}
-{% endfor %}{{ rbracket }},
+  "start_join": [ "{{consul_bootstrap}}","{{consul_server}}" ],
   "ui_dir": "/opt/consul/ui/dist"
 }

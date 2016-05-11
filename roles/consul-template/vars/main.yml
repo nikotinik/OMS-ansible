@@ -2,6 +2,6 @@
 # vars file for consul-template
 
 consul-template-pckg: consul-template
-haproxy_http_port: 80
+haproxy_http_port: 8080
 haproxy_https_port: 443
 

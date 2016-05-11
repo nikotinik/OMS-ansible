@@ -2,3 +2,5 @@
 # vars file for consul
 
 consul_pckg: consul
+consul_bootstrap: 192.168.22.21
+consul_server: 192.168.22.22
